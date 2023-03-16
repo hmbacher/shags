@@ -1,0 +1,14 @@
+{
+    "name": "shags",
+    "version": "1.0.0",
+    "description": "Smarthome Health Aggregator Service.",
+    "author": "Hans Bacher <hmbacher@gmail.com>",
+    "main": "service.js",
+    "scripts": {
+      "start": "node service.js"
+    },
+    "dependencies": {
+      "express": "^4.18.2",
+      "dockerode": "^3.3.5"
+    }
+  }

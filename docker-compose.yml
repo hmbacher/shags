@@ -1,0 +1,36 @@
+version: "3.5"
+
+networks:
+  smarthome:
+    external: true
+    name: smarthome
+
+services:
+  # Service to provide electricity prices
+  shags:
+    image: shags
+    container_name: shags
+    networks:
+      - smarthome
+    ports:
+      - '${PORT_OUTER}:${PORT_INNER}'
+    restart: on-failure
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "${SSL_SRC_DIR}:${SSL_DIR}"
+    hostname: "shags"
+    environment:
+      - SHAGS_PORT=${PORT_INNER}
+      - SSL_CERT_FILE=${SSL_CERT}
+      - SSL_KEY_FILE=${SSL_KEY}
+    healthcheck:
+      test: curl --insecure --fail https://localhost:${PORT_INNER}/diag || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+    logging:
+      driver: loki
+      options:
+        loki-url: "http://${LOKI_SERVER}/loki/api/v1/push"
+        loki-retries: "5"

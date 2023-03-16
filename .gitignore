@@ -1,0 +1,21 @@
+# Ignore docker-compose environment variables settings files
+.env*
+!.env.template
+
+# Ignore MS VSCode files
+.vscode
+
+# NOT WORKING - Use Windows Group Policy Editor to disable Zone-Identifier files according to
+# https://devblogs.microsoft.com/oldnewthing/20140311-00/?p=1543 and
+# https://windowsreport.com/windows-cannot-find-gpedit-msc-windows-11/
+# Use solution #3 (GitHub download of batch file)
+#
+# Zone.Identifier files are generated when copying files from Windows to WSL and break
+# Git workflows
+*:Zone.Identifier
+
+# Ignoring QNAP defaul folders beginning with '@' (@Recently-Snapshot, @Recycle)
+@*/
+
+# QNAP App Configuration file
+docker-compose.qnap.yml
