@@ -28,7 +28,7 @@ cp .env.template .env
 ```
 In dieser Datei, die von Docker Compose genutzt wird, werden die folgenden Konfigurationen vorgenommen.
 
-### Zertifikate
+### SSL-Zertifikate (optional)
 Die NodeJS-App stellt einen HTTPS-Server bereit und benötigt SSL-Zertifikate, die dem jeweiligen Domain-Setup entsprechen. Die Namen und der Host-Ablageort der Zertifikate werden über die entsprechenden Umgebungsvariablen in der `.env`-Datei konfiguriert.
 ```bash
 # --SSL
@@ -41,7 +41,7 @@ SSL_KEY=${SSL_DIR}/${SSL_KEY_FILENAME}
 ```
 Die Bereitstellung der Zertifikate an den *shags*-Container erfolgt über [Docker bind mounts](https://docs.docker.com/storage/bind-mounts/) (siehe `docker-compose.yml`).
 
-### Logging
+### Logging (optional)
 Das vorliegende Docker Compose Setup setzt auf eine vorhandene [Grafana Loki](https://grafana.com/oss/loki/)-Instanz (die z.B. im [Smarthome](https://github.com/hmbacher/smarthome) App-Verbund bereitgestellt wird).
 ```bash
 # --Logging
@@ -70,9 +70,9 @@ Falls das *shags*-Image nicht aus früheren Setups vorhanden ist, muss dieses er
 
         cd /share/tech/shags/tfrec/image
 
-3. Docker-Image `shags` bauen
+3. Docker-Image `shags-http` (oder analog `shags-https`) bauen
 
-        docker build -t shags .
+        docker build -t shags-http .
         docker images
 
 ## shags ausführen

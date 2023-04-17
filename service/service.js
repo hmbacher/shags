@@ -1,20 +1,22 @@
 'use strict';
 
 const fs = require('fs');
-const https = require('https');
+const http = require('http');
+//const https = require('https');
 const express = require('express');
 const Docker = require('dockerode');
 
 // HTTP(S) Server setup
-const HTTPS_PORT = process.env.SHAGS_PORT || 443;
-const HTTPS_HOST = process.env.SHAGS_HOST || '0.0.0.0';
+const SERVER_PORT = process.env.SHAGS_PORT || 80;
+const SERVER_HOST = process.env.SHAGS_HOST || '0.0.0.0';
+/* SSL-STUFF
 const HTTPS_CERT_FILENAME = process.env.SSL_CERT_FILE;
 const HTTPS_KEY_FILENAME = process.env.SSL_KEY_FILE;
 
 let sslOptions = {
   key: fs.readFileSync(HTTPS_KEY_FILENAME),
   cert: fs.readFileSync(HTTPS_CERT_FILENAME)
-};
+}; */
 
 // Docker setup
 var socket = process.env.DOCKER_SOCKET || '/var/run/docker.sock';
@@ -162,10 +164,11 @@ app.get('/diag', async (req, res) => {
  
 
 // Create the HTTPS server
-const httpsServer = https.createServer(sslOptions, app);
-let httpsPromise = new Promise(function(resolve, reject) {
-  httpsServer.listen(HTTPS_PORT, HTTPS_HOST, () => {
-    console.log(`HTTPS server listening on https://${HTTPS_HOST}:${HTTPS_PORT}.`);
+//const server = http.createServer(sslOptions, app);
+const server = http.createServer(app);
+let serverPromise = new Promise(function(resolve, reject) {
+  server.listen(SERVER_PORT, SERVER_HOST, () => {
+    console.log(`HTTP(S) server listening on https://${SERVER_HOST}:${SERVER_PORT}.`);
     resolve();
   });
 }).then( () => {  
@@ -198,16 +201,16 @@ function exitHandler(options) {
 
 function cleanUp() {
 
-  // HTTPS Server shutdown
-  console.info('Shutting down HTTPS server...');
-  let httpsShutdownPromise = new Promise(function(resolve, reject) {
-    httpsServer.close(() => {
-      console.info('HTTP server shut down.');
+  // HTTP(S) Server shutdown
+  console.info('Shutting down HTTP(S) server...');
+  let serverShutdownPromise = new Promise(function(resolve, reject) {
+    server.close(() => {
+      console.info('HTTP(S) server shut down.');
       resolve();
     });
   });
 
-  return httpsShutdownPromise;
+  return serverShutdownPromise;
 }
 
 function configureSignalHandlers() {
