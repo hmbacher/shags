@@ -14,7 +14,7 @@ services:
       - smarthome
     ports:
       - '${PORT_OUTER}:${PORT_INNER}'
-    restart: on-failure
+    restart: unless-stopped
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
       #- "${SSL_SRC_DIR}:${SSL_DIR}"
@@ -24,7 +24,8 @@ services:
       #- SSL_CERT_FILE=${SSL_CERT}
       #- SSL_KEY_FILE=${SSL_KEY}
     healthcheck:
-      test: curl --insecure --fail https://localhost:${PORT_INNER}/diag || exit 1
+      #test: curl --insecure --fail https://localhost:${PORT_INNER}/diag || exit 1
+      test: curl --fail http://localhost:${PORT_INNER}/diag || exit 1
       interval: 30s
       timeout: 10s
       retries: 5
